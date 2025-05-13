@@ -1,0 +1,15 @@
+{% extends "test_app/base.html" %}
+
+{% block content %}
+<div class="state-indicator">Resting State (R)</div>
+<div class="timer" id="timer"></div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const timerDisplay = document.getElementById('timer');
+        const duration = {% if remaining_time %}{{ remaining_time }}{% else %}18{% endif %}; // 18 seconds for resting state
+        // When resting state timer ends redirect to timer_state
+        const timerStateUrl = "{% url 'timer_state' session_id %}";
+        startTimer(duration, timerDisplay, timerStateUrl);
+    });
+</script>
+{% endblock %}

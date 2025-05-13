@@ -1,0 +1,53 @@
+{% extends "test_app/base.html" %}
+
+{% block content %}
+<div class="state-indicator">Bored State (B)</div>
+<div class="timer" id="timer"></div>
+<div class="question">{{ question }}</div>
+<form method="post" action="{% url 'submit_answer' session_id state_attempt_id %}">
+    {% csrf_token %}
+    <input type="hidden" name="question" value="{{ question }}">
+    <input type="hidden" id="remaining_time" name="remaining_time" value="0">
+    <input type="text" name="answer" placeholder="Enter your answer" required autofocus>
+    <button type="submit">Submit</button>
+</form>
+<script>
+    let globalTimer;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const timerDisplay = document.getElementById('timer');
+        const duration = {% if remaining_time %}{{ remaining_time }}{% else %}184{% endif %}; 
+        const timerStateUrl = "{% url 'timer_state' session_id %}";
+        
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function() {
+            document.getElementById('remaining_time').value = globalTimer;
+        });
+        
+        startTimerWithTracking(duration, timerDisplay, timerStateUrl);
+    });
+    
+    function startTimerWithTracking(duration, display, redirectUrl = null) {
+        globalTimer = duration;
+        let minutes, seconds;
+        const countdown = setInterval(function () {
+            minutes = parseInt(globalTimer / 60, 10);
+            seconds = parseInt(globalTimer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--globalTimer < 0) {
+                clearInterval(countdown);
+                // Redirect based on the provided URL
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            }
+        }, 1000);
+    }
+</script>
+{% endblock %}

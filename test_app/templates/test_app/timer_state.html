@@ -1,0 +1,16 @@
+{% extends "test_app/base.html" %}
+
+{% block content %}
+<div class="state-indicator">Transition Timer</div>
+<div class="timer" id="timer"></div>
+<p>Preparing for next state: {{ next_state }}</p>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const timerDisplay = document.getElementById('timer');
+        const duration = 25; 
+        const nextStateUrl = "{% url 'test_state' session_id next_state %}";
+        startTimer(duration, timerDisplay, nextStateUrl);
+    });
+</script> 
+{% endblock %}
+

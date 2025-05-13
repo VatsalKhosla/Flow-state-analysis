@@ -1,0 +1,24 @@
+
+{% extends "test_app/base.html" %}
+
+{% block content %}
+<div class="start-page">
+    <h1>Cognitive Test</h1>
+    <p>Welcome to the Cognitive Test. Please read the instructions carefully:</p>
+    <ul>
+        <li>The test consists of multiple states</li>
+        <li>Each state will require different cognitive tasks</li>
+        <li>Pay attention to the instructions for each state</li>
+    </ul>
+    <div class="sequence-buttons">
+        <form method="post" action="{% url 'start_first_sequence' %}">
+            {% csrf_token %}
+            <button type="submit">Start First Sequence</button>
+        </form>
+        <form method="post" action="{% url 'start_second_sequence' %}">
+            {% csrf_token %}
+            <button type="submit">Start Second Sequence</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
